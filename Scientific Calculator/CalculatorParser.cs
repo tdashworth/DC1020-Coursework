@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scientific_Calculator
 {
@@ -10,7 +7,7 @@ namespace Scientific_Calculator
     {
         readonly static string[] operators = { "+", "-", "/", "*" };
 
-        public static decimal Resolve(string expressionStr)
+        public static double Resolve(string expressionStr)
         {
             string[] expressionAry = Clean(expressionStr);
 
@@ -39,7 +36,7 @@ namespace Scientific_Calculator
             {
                 if (index % 2 == 0) // Index is even, must be a number
                 {
-                    if (!Decimal.TryParse(expressionAry[index], out var tempResult))
+                    if (!Double.TryParse(expressionAry[index], out var tempResult))
                         return false;
                 }
                 else // Index is old, must be an operator
@@ -52,25 +49,25 @@ namespace Scientific_Calculator
             return true;
         }
 
-        private static decimal Calculate(string[] expressionAry)
+        private static double Calculate(string[] expressionAry)
         {
-            decimal result = Decimal.Parse(expressionAry[0]);
+            double result = Double.Parse(expressionAry[0]);
 
             for (int index = 1; index < expressionAry.Length; index += 2)
             {
                 switch (expressionAry[index].Trim())
                 {
                     case "+":
-                        result += Decimal.Parse(expressionAry[index + 1]);
+                        result += Double.Parse(expressionAry[index + 1]);
                         break;
                     case "-":
-                        result -= Decimal.Parse(expressionAry[index + 1]);
+                        result -= Double.Parse(expressionAry[index + 1]);
                         break;
                     case "*":
-                        result *= Decimal.Parse(expressionAry[index + 1]);
+                        result *= Double.Parse(expressionAry[index + 1]);
                         break;
                     case "/":
-                        result /= Decimal.Parse(expressionAry[index + 1]);
+                        result /= Double.Parse(expressionAry[index + 1]);
                         break;
                 }
             }
