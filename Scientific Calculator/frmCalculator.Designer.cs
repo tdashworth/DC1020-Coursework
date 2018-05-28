@@ -337,6 +337,7 @@
             this.Controls.Add(this.btnNum2);
             this.Controls.Add(this.btnNum1);
             this.Controls.Add(this.tbxNumberDisplay);
+            this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(367, 400);
             this.MinimumSize = new System.Drawing.Size(367, 400);
             this.Name = "frmCalculator";

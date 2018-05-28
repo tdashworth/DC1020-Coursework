@@ -8,19 +8,26 @@ namespace Scientific_Calculator
 {
     public class CalculatorParser
     {
+        readonly static string[] operators = { "+", "-", "/", "*" };
+
         public static decimal Resolve(string expressionStr)
         {
-            expressionStr = expressionStr.Replace("+", " + ");
-            expressionStr = expressionStr.Replace("-", " - ");
-            expressionStr = expressionStr.Replace("/", " / ");
-            expressionStr = expressionStr.Replace("*", " * ");
-
-            string[] expressionAry = expressionStr.Split(' ');
+            string[] expressionAry = Clean(expressionStr);
 
             if (!Validate(expressionAry))
                 throw new Exception("Invalid expression");
 
             return Calculate(expressionAry);
+        }
+
+        private static string[] Clean(string expressionStr)
+        {
+            expressionStr = expressionStr.Replace(" ", "");
+            foreach (var operation in operators)
+                expressionStr = expressionStr.Replace(operation, " " + operation + " ");
+
+            string[] expressionAry = expressionStr.Split(' ');
+            return expressionAry;
         }
 
         private static bool Validate(string[] expressionAry)
@@ -37,8 +44,7 @@ namespace Scientific_Calculator
                 }
                 else // Index is old, must be an operator
                 {
-                    string[] validOperators = { "+", "-", "/", "*" };
-                    if (!validOperators.Contains(expressionAry[index].Trim()))
+                    if (!operators.Contains(expressionAry[index].Trim()))
                         return false;
                 }
             }
@@ -55,7 +61,7 @@ namespace Scientific_Calculator
                 switch (expressionAry[index].Trim())
                 {
                     case "+":
-                        result += Decimal.Parse(expressionAry[index+1]);
+                        result += Decimal.Parse(expressionAry[index + 1]);
                         break;
                     case "-":
                         result -= Decimal.Parse(expressionAry[index + 1]);

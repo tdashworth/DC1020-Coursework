@@ -79,10 +79,10 @@ namespace Scientific_Calculator
         // TODO Sine - sin(x), sinh(x) 
         // TODO Cosine - cos(x), cosh(x)
         // TODO Tangent - tan(x), tanh(x)
-        // TODO Other - Exp, Mod, log, 10^x, n!, 1/(x), 
+        // TODO Other - Exp, Mod, log, 10^x, n!, 1/(x)
 
         // TODO Sign - +/-
-        // TODO Update clear functions - C clears both displays, CE clears number display
+        // TODO Add CE clear function - clears number display
     
     }
 }
