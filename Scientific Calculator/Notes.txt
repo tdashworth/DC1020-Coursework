@@ -1,0 +1,22 @@
+﻿def extractNesting(string):
+	nestedStatements = []
+	paraenesisExist = False
+	counter = 0
+	openParaenesis = 0
+	closeParaenesis = 0
+	for i in range(0, len(string)):
+		char = string[i]
+		if char == "(":
+			if paraenesisExist == False:
+				openParaenesis = i+1
+				paraenesisExist = True
+			counter += 1
+		elif char == ")":
+			counter -= 1
+			if paraenesisExist == True:
+				closeParaenesis = i
+			if counter == 0:
+				nestedStatements.append(string[openParaenesis:closeParaenesis])
+				paraenesisExist = False
+		print(char, counter, paraenesisExist)
+	print(nestedStatements)

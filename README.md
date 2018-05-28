@@ -20,6 +20,7 @@ Submission Deadline: 3.00pm, 1 st July, 2018 Please package all files in your .N
 
 ### Minimum Requirements
 To get the basic marks (40%), the function of your calculator should not be simpler than the following one: 
+
 ![Basic Calculator](https://lh3.googleusercontent.com/J02Gu4DR4Dq3WyYmjYY5ZTqi5BYqI_HWD38X9aicoB8sWyhD-joqRniUcEDZzEHxCBEPLuv8hZeT2uSxvKw0ZNpTk1fcIuxNfNrcl0Oy5DAUbFtCH32IUN8msJiOwNFXu6WH9j089vCIqyX4hl2RTUyxbi4Ttq8uUUzJo5n4Aa7LsIRym8FRQTJ31TTZkqSBs5fZA6A66Se855Pn6WNCP0evJTxs7g8I5iIxuWANdApZb6Q1lNzsbhxnOc9ffTqH_JdMuHqII-nI2gk3qbS3WFp-2rwXLq6frc_L9-wFyF4CEPMq7EPxG3RPSuG3oK4_Y7aUDactSFP8nMFKSOIJ0MChTLAp9Bx5-fzY6ZoXZXxSXUsgrc1fyPJN8i2dvbAwAnb10m_5krCHutjl1CWoCIzB-1tA8j5RQVk2MKX7spg3yY5A_Be7YlWj7Jn_KhtTcvYM-ly7l61Xa_-DlsxFeVL2Y71zPyQHhGDhfdRYbXejC7VQnsw_I00yCKrnnk6kLfKwE3epWqt3vFmna--tHCr_mNqjaCYLXuQPWAT802jlho_pnRYc7-gG9udZblgPNmJUOj-FeZkNNvIZZRHlxz7GSYOs8y0Z-EL78ZIB=w239-h253-no)
 
 The following basic operations are mandatory for your calculator: 
