@@ -12,7 +12,8 @@ namespace Scientific_Calculator
 {
     public partial class frmCalculator : Form
     {
-        bool numberBeingEntered = false;
+        bool isNumberBeingEntered = false;
+        string previousEntry = "";
 
         public frmCalculator()
         {
@@ -22,20 +23,41 @@ namespace Scientific_Calculator
         private void btnOperator_Click(object sender, EventArgs e)
         {
             Button btnOp = (Button)sender;
-            tbxCalculationDisplay.Text += tbxNumberDisplay.Text + btnOp.Text;
-            numberBeingEntered = false;
+
+            if (previousEntry.Length > 0)
+                // Removes the previous entry because two operation buttons were pressed 
+                tbxCalculationDisplay.Text = tbxCalculationDisplay.Text.Substring(0, tbxCalculationDisplay.Text.Length - previousEntry.Length);
+
+            previousEntry = tbxNumberDisplay.Text + btnOp.Text;
+            tbxCalculationDisplay.Text += previousEntry;
+            isNumberBeingEntered = false;
         }
 
         private void btnNum_Click(object sender, EventArgs e)
         {
             Button btnNum = (Button)sender;
 
-            if (!numberBeingEntered)
+            if (!isNumberBeingEntered)
                 // Clear previous value if a new number is being entered
                 tbxNumberDisplay.Text = "";
 
             tbxNumberDisplay.Text += btnNum.Text;
-            numberBeingEntered = true;
+            isNumberBeingEntered = true;
+            previousEntry = "";
+        }
+
+        private void btnEquals_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                tbxCalculationDisplay.Text += tbxNumberDisplay.Text;
+                tbxNumberDisplay.Text = CalculatorParser.Resolve(tbxCalculationDisplay.Text).ToString();
+                tbxCalculationDisplay.Text = "";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -55,24 +77,7 @@ namespace Scientific_Calculator
             tbxNumberDisplay.Text = displayText.Substring(0, displayText.Length - 1);
         }
 
-        private void btnEquals_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                tbxCalculationDisplay.Text += tbxNumberDisplay.Text;
-                tbxNumberDisplay.Text = CalculatorParser.Resolve(tbxCalculationDisplay.Text).ToString();
-                tbxCalculationDisplay.Text = "";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // TODO MC - Clear memory to 0
-        // TODO MR - Append memory to display
-        // TODO M+ - Resolve and add to memory
-        // TODO M- - Resolve and subtract from memory
+        // TODO Buttons - MC, MR, M+, M-, CE
 
         // TODO Exponents - x^2, x^3?, x^y
         // TODO Roots - √(x), 3√(x), y√(x)
@@ -82,7 +87,5 @@ namespace Scientific_Calculator
         // TODO Other - Exp, Mod, log, 10^x, n!, 1/(x)
 
         // TODO Sign - +/-
-        // TODO Add CE clear function - clears number display
-    
     }
 }
