@@ -7,6 +7,7 @@ namespace Scientific_Calculator
     {
         bool isNumberBeingEntered = false;
         string previousEntry = "";
+        double memory = 0;
 
         public frmCalculator()
         {
@@ -46,6 +47,7 @@ namespace Scientific_Calculator
                 tbxCalculationDisplay.Text += tbxNumberDisplay.Text;
                 tbxNumberDisplay.Text = CalculatorParser.Resolve(tbxCalculationDisplay.Text).ToString();
                 tbxCalculationDisplay.Text = "";
+                previousEntry = "";
             }
             catch (Exception ex)
             {
@@ -56,6 +58,11 @@ namespace Scientific_Calculator
         private void btnClear_Click(object sender, EventArgs e)
         {
             tbxCalculationDisplay.Text = "";
+            tbxNumberDisplay.Text = "";
+        }
+
+        private void btnClearEntry_Click(object sender, EventArgs e)
+        {
             tbxNumberDisplay.Text = "";
         }
 
@@ -70,7 +77,41 @@ namespace Scientific_Calculator
             tbxNumberDisplay.Text = displayText.Substring(0, displayText.Length - 1);
         }
 
-        // TODO Buttons - MC, MR, M+, M-, CE
+        private void btnMemoryClear_Click(object sender, EventArgs e)
+        {
+            memory = 0;
+        }
+
+        private void btnMemoryRecall_Click(object sender, EventArgs e)
+        {
+            tbxNumberDisplay.Text = memory.ToString();
+        }
+
+        private void btnMemoryAddition_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double numberInDisplay = Double.Parse(tbxNumberDisplay.Text);
+                memory += numberInDisplay;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnMemorySubtraction_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                double numberInDisplay = Double.Parse(tbxNumberDisplay.Text);
+                memory -= numberInDisplay;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         // TODO Exponents - x^2, x^3?, x^y
         // TODO Roots - √(x), 3√(x), y√(x)
