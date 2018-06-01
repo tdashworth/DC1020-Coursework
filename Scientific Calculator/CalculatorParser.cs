@@ -1,75 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scientific_Calculator
 {
     public class CalculatorParser
     {
-        public static decimal Resolve(string expressionStr)
+        readonly static string[] operators = { "+", "-", "/", "*", "%", "^" };
+
+        public static double Resolve(string expressionStr)
         {
-            expressionStr = expressionStr.Replace("+", " + ");
-            expressionStr = expressionStr.Replace("-", " - ");
-            expressionStr = expressionStr.Replace("/", " / ");
-            expressionStr = expressionStr.Replace("*", " * ");
-
-            string[] expressionAry = expressionStr.Split(' ');
-
-            if (!Validate(expressionAry))
-                throw new Exception("Invalid expression");
-
+            PerformFunctions(ref expressionStr);
+            string[] expressionAry = Clean(expressionStr);
             return Calculate(expressionAry);
         }
 
-        private static bool Validate(string[] expressionAry)
+        private static string[] Clean(string expressionStr)
         {
-            if (expressionAry.Length < 3 || expressionAry.Length % 2 == 0)
-                return false;
+            expressionStr = expressionStr.Replace(" ", "");
+            foreach (var operation in operators)
+                expressionStr = expressionStr.Replace(operation, " " + operation + " ");
 
-            for (int index = 0; index < expressionAry.Length; index++)
-            {
-                if (index % 2 == 0) // Index is even, must be a number
-                {
-                    if (!Decimal.TryParse(expressionAry[index], out var tempResult))
-                        return false;
-                }
-                else // Index is old, must be an operator
-                {
-                    string[] validOperators = { "+", "-", "/", "*" };
-                    if (!validOperators.Contains(expressionAry[index].Trim()))
-                        return false;
-                }
-            }
-
-            return true;
+            string[] expressionAry = expressionStr.Split(' ');
+            return expressionAry;
         }
 
-        private static decimal Calculate(string[] expressionAry)
+        private static double Calculate(string[] expressionAry)
         {
-            decimal result = Decimal.Parse(expressionAry[0]);
+            double result = StringToDouble(expressionAry[0]);
 
             for (int index = 1; index < expressionAry.Length; index += 2)
             {
                 switch (expressionAry[index].Trim())
                 {
                     case "+":
-                        result += Decimal.Parse(expressionAry[index+1]);
+                        result += StringToDouble(expressionAry[index + 1]);
                         break;
                     case "-":
-                        result -= Decimal.Parse(expressionAry[index + 1]);
+                        result -= StringToDouble(expressionAry[index + 1]);
                         break;
                     case "*":
-                        result *= Decimal.Parse(expressionAry[index + 1]);
+                        result *= StringToDouble(expressionAry[index + 1]);
                         break;
                     case "/":
-                        result /= Decimal.Parse(expressionAry[index + 1]);
+                        result /= StringToDouble(expressionAry[index + 1]);
+                        break;
+                    case "^":
+                        result = Math.Pow(result, StringToDouble(expressionAry[index + 1]));
+                        break;
+                    case "%":
+                        result %= StringToDouble(expressionAry[index + 1]);
                         break;
                 }
             }
 
             return result;
+        }
+
+        readonly static Dictionary<string, Func<double, double>> functions = new Dictionary<string, Func<double, double>>()
+        {
+            {"sin",   (x) => Math.Sin(x) },
+            {"cos",   (x) => Math.Cos(x) },
+            {"tan",   (x) => Math.Tan(x) },
+            {"sin-1", (x) => Math.Asin(x) },
+            {"cos-1", (x) => Math.Acos(x) },
+            {"tan-1", (x) => Math.Atan(x) },
+            {"log",   (x) => Math.Log(x) },
+            {"root2", (x) => Math.Sqrt(x) },
+            {"root3", (x) => Math.Pow(x, 1/(double)3) },
+            {"exp",   (x) => Math.Exp(x) }
+
+        };
+
+        private static void PerformFunctions(ref string expressionStr)
+        {
+            foreach (var func in functions)
+            {
+                string funcName = func.Key + "(";
+                while (expressionStr.Contains(funcName))
+                {
+                    int startBracket = expressionStr.IndexOf(funcName) + funcName.Length - 1;
+                    int endBracket = Utils.LocateEndingParenesis(expressionStr, startBracket);
+                    string bracketedValue = expressionStr.Substring(startBracket + 1, endBracket - startBracket - 1);
+                    double calculatedValue = func.Value(StringToDouble(bracketedValue));
+
+                    expressionStr =
+                        expressionStr.Substring(0, startBracket - funcName.Length + 1) +
+                        calculatedValue.ToString() +
+                        expressionStr.Substring(endBracket + 1);
+                }
+            }
+        }
+
+        private static double StringToDouble (string s)
+        {                
+            if (s == "π")
+                return Math.PI;
+
+            return Double.Parse(s);
         }
     }
 }
