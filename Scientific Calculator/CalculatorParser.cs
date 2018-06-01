@@ -1,19 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Scientific_Calculator
 {
     public class CalculatorParser
     {
-        readonly static string[] operators = { "+", "-", "/", "*" };
+        readonly static string[] operators = { "+", "-", "/", "*", "%", "^" };
 
         public static double Resolve(string expressionStr)
         {
+            PerformFunctions(ref expressionStr);
             string[] expressionAry = Clean(expressionStr);
-
-            if (!Validate(expressionAry))
-                throw new Exception("Invalid expression");
-
             return Calculate(expressionAry);
         }
 
@@ -27,52 +25,79 @@ namespace Scientific_Calculator
             return expressionAry;
         }
 
-        private static bool Validate(string[] expressionAry)
-        {
-            if (expressionAry.Length < 3 || expressionAry.Length % 2 == 0)
-                return false;
-
-            for (int index = 0; index < expressionAry.Length; index++)
-            {
-                if (index % 2 == 0) // Index is even, must be a number
-                {
-                    if (!Double.TryParse(expressionAry[index], out var tempResult))
-                        return false;
-                }
-                else // Index is old, must be an operator
-                {
-                    if (!operators.Contains(expressionAry[index].Trim()))
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
         private static double Calculate(string[] expressionAry)
         {
-            double result = Double.Parse(expressionAry[0]);
+            double result = StringToDouble(expressionAry[0]);
 
             for (int index = 1; index < expressionAry.Length; index += 2)
             {
                 switch (expressionAry[index].Trim())
                 {
                     case "+":
-                        result += Double.Parse(expressionAry[index + 1]);
+                        result += StringToDouble(expressionAry[index + 1]);
                         break;
                     case "-":
-                        result -= Double.Parse(expressionAry[index + 1]);
+                        result -= StringToDouble(expressionAry[index + 1]);
                         break;
                     case "*":
-                        result *= Double.Parse(expressionAry[index + 1]);
+                        result *= StringToDouble(expressionAry[index + 1]);
                         break;
                     case "/":
-                        result /= Double.Parse(expressionAry[index + 1]);
+                        result /= StringToDouble(expressionAry[index + 1]);
+                        break;
+                    case "^":
+                        result = Math.Pow(result, StringToDouble(expressionAry[index + 1]));
+                        break;
+                    case "%":
+                        result %= StringToDouble(expressionAry[index + 1]);
                         break;
                 }
             }
 
             return result;
+        }
+
+        readonly static Dictionary<string, Func<double, double>> functions = new Dictionary<string, Func<double, double>>()
+        {
+            {"sin",   (x) => Math.Sin(x) },
+            {"cos",   (x) => Math.Cos(x) },
+            {"tan",   (x) => Math.Tan(x) },
+            {"sin-1", (x) => Math.Asin(x) },
+            {"cos-1", (x) => Math.Acos(x) },
+            {"tan-1", (x) => Math.Atan(x) },
+            {"log",   (x) => Math.Log(x) },
+            {"root2", (x) => Math.Sqrt(x) },
+            {"root3", (x) => Math.Pow(x, 1/(double)3) },
+            {"exp",   (x) => Math.Exp(x) }
+
+        };
+
+        private static void PerformFunctions(ref string expressionStr)
+        {
+            foreach (var func in functions)
+            {
+                string funcName = func.Key + "(";
+                while (expressionStr.Contains(funcName))
+                {
+                    int startBracket = expressionStr.IndexOf(funcName) + funcName.Length - 1;
+                    int endBracket = Utils.LocateEndingParenesis(expressionStr, startBracket);
+                    string bracketedValue = expressionStr.Substring(startBracket + 1, endBracket - startBracket - 1);
+                    double calculatedValue = func.Value(StringToDouble(bracketedValue));
+
+                    expressionStr =
+                        expressionStr.Substring(0, startBracket - funcName.Length + 1) +
+                        calculatedValue.ToString() +
+                        expressionStr.Substring(endBracket + 1);
+                }
+            }
+        }
+
+        private static double StringToDouble (string s)
+        {                
+            if (s == "π")
+                return Math.PI;
+
+            return Double.Parse(s);
         }
     }
 }
