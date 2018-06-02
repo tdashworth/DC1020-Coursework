@@ -6,8 +6,8 @@ namespace Scientific_Calculator
 {
     public partial class frmCalculator : Form
     {
-        enum Operations { Number, Operator, Function, Clear };
-        Operations lastOperation = Operations.Clear;
+        enum Operations { Number, Operator, Function, Clear, Other };
+        Operations lastOperation = Operations.Other;
         double memory = 0;
 
         public frmCalculator()
@@ -29,7 +29,7 @@ namespace Scientific_Calculator
                 currentCalculation = tbxCalculationDisplay.Text.Substring(0, tbxCalculationDisplay.Text.SecondToLastIndexOf(" "));
 
             Calculate(currentCalculation);
-            tbxCalculationDisplay.Text = currentCalculation + " " + btnOp.Text + " ";
+            tbxCalculationDisplay.Text = currentCalculation + " " + (string)btnOp.Tag + " ";
 
             lastOperation = Operations.Operator;
         }
@@ -61,7 +61,7 @@ namespace Scientific_Calculator
         private void btnStringFunction_Click(object sender, EventArgs e)
         {
             Button btnFn = (Button)sender;
-            
+
             tbxCalculationDisplay.Text += String.Format((string)btnFn.Tag, tbxNumberDisplay.Text);
             Calculate(tbxCalculationDisplay.Text);
 
@@ -92,6 +92,8 @@ namespace Scientific_Calculator
             lastOperation = Operations.Clear;
         }
 
+        // Display methods
+
         private void btnClear_Click(object sender, EventArgs e)
         {
             tbxCalculationDisplay.Text = "";
@@ -110,6 +112,8 @@ namespace Scientific_Calculator
 
             tbxNumberDisplay.Text = displayText.Substring(0, Utils.Positive(displayText.Length - 1));
         }
+
+        // Memory methods
 
         private void btnMemoryClear_Click(object sender, EventArgs e)
         {
@@ -147,6 +151,28 @@ namespace Scientific_Calculator
             }
         }
 
+        // Format/Other methods
+
+        private void btnLeftParenesis_Click(object sender, EventArgs e)
+        {
+            tbxCalculationDisplay.Text += "(";
+            lastOperation = Operations.Other;
+        }
+
+        private void btnRightParaenesis_Click(object sender, EventArgs e)
+        {
+            tbxCalculationDisplay.Text += tbxNumberDisplay.Text + ")";
+            Calculate(tbxCalculationDisplay.Text);
+            lastOperation = Operations.Other;
+
+        }
+
+        private void btnPi_Click(object sender, EventArgs e)
+        {
+            tbxNumberDisplay.Text = Math.PI.ToString();
+            lastOperation = Operations.Other;
+        }
+
         private void Calculate(string calculation)
         {
             try
@@ -158,10 +184,5 @@ namespace Scientific_Calculator
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        // TODO Roots - √(x), 3√(x), y√(x)
-        // TODO Other - Exp, Mod
-
-        // TODO Sign - +/-
     }
 }
