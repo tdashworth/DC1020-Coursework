@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Scientific_Calculator
+﻿namespace Scientific_Calculator
 {
-    class Utils
+    public static class Utils
     {
-        public static int Positive(int i)
+        internal static int Positive(int i)
         {
             if (i < 0)
                 i = 0;
@@ -16,7 +10,7 @@ namespace Scientific_Calculator
             return i;
         }
 
-        public static int LocateEndingParenesis(string stringToSearchIn, int startIndex)
+        internal static int LocateEndingParenesis(string stringToSearchIn, int startIndex)
         {
             bool paraenesisExist = false;
             int counter = 0;
@@ -52,6 +46,21 @@ namespace Scientific_Calculator
 
             return -1;
         }
+
+        internal static bool ValidBrackets(string calculation)
+        {
+            int count = 0;
+
+            foreach(char c in calculation)
+            {
+                if (c == '(')
+                    count++;
+                if (c == ')')
+                    count--;
+            }
+
+            return count == 0;
+        }
     }
 }
 
@@ -59,9 +68,7 @@ namespace StringExtensions
 {
     public static class StringExtensionsClass
     {
-        public static int SecondToLastIndexOf(this string s, string lookup)
-        {
-            return s.Substring(0, s.LastIndexOf(lookup) - 1).LastIndexOf(lookup);
-        }
+        public static int SecondToLastIndexOf(this string s, string lookup) => s.Substring(0, s.LastIndexOf(lookup) - 1).LastIndexOf(lookup);
+        public static string[] SplitAt(this string s, int index) => new string[] { s.Substring(0, index), s.Substring(index) };
     }
 }

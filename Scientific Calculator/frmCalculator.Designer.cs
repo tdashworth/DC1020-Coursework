@@ -88,6 +88,7 @@
             this.tbxNumberDisplay.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.tbxNumberDisplay.Size = new System.Drawing.Size(596, 38);
             this.tbxNumberDisplay.TabIndex = 0;
+            this.tbxNumberDisplay.Text = "0";
             this.tbxNumberDisplay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbxNumberDisplay.WordWrap = false;
             // 
@@ -254,7 +255,7 @@
             this.btnPeriod.TabIndex = 11;
             this.btnPeriod.Text = ".";
             this.btnPeriod.UseVisualStyleBackColor = false;
-            this.btnPeriod.Click += new System.EventHandler(this.btnNum_Click);
+            this.btnPeriod.Click += new System.EventHandler(this.btnPeriod_Click);
             // 
             // btnEquals
             // 
@@ -266,7 +267,7 @@
             this.btnEquals.Location = new System.Drawing.Point(528, 340);
             this.btnEquals.Name = "btnEquals";
             this.btnEquals.Size = new System.Drawing.Size(80, 50);
-            this.btnEquals.TabIndex = 12;
+            this.btnEquals.TabIndex = 0;
             this.btnEquals.Text = "=";
             this.btnEquals.UseVisualStyleBackColor = false;
             this.btnEquals.Click += new System.EventHandler(this.btnEquals_Click);
@@ -371,13 +372,13 @@
             // 
             this.tbxCalculationDisplay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.tbxCalculationDisplay.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.tbxCalculationDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbxCalculationDisplay.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.tbxCalculationDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbxCalculationDisplay.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(215)))), ((int)(((byte)(215)))));
             this.tbxCalculationDisplay.Location = new System.Drawing.Point(12, 12);
             this.tbxCalculationDisplay.Name = "tbxCalculationDisplay";
             this.tbxCalculationDisplay.ReadOnly = true;
             this.tbxCalculationDisplay.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbxCalculationDisplay.Size = new System.Drawing.Size(596, 20);
+            this.tbxCalculationDisplay.Size = new System.Drawing.Size(596, 16);
             this.tbxCalculationDisplay.TabIndex = 19;
             this.tbxCalculationDisplay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbxCalculationDisplay.WordWrap = false;
@@ -473,10 +474,10 @@
             this.btn1Over.Name = "btn1Over";
             this.btn1Over.Size = new System.Drawing.Size(80, 50);
             this.btn1Over.TabIndex = 29;
-            this.btn1Over.Tag = "1/({0})";
+            this.btn1Over.Tag = "1/";
             this.btn1Over.Text = "1/(x)";
             this.btn1Over.UseVisualStyleBackColor = false;
-            this.btn1Over.Click += new System.EventHandler(this.btnStringFunction_Click);
+            this.btn1Over.Click += new System.EventHandler(this.btnMathFunction_Click);
             // 
             // btnLog
             // 
@@ -521,7 +522,7 @@
             this.btnYRoot.Name = "btnYRoot";
             this.btnYRoot.Size = new System.Drawing.Size(80, 50);
             this.btnYRoot.TabIndex = 34;
-            this.btnYRoot.Tag = "y√";
+            this.btnYRoot.Tag = "yroot";
             this.btnYRoot.Text = "y√(x)";
             this.btnYRoot.UseVisualStyleBackColor = false;
             this.btnYRoot.Click += new System.EventHandler(this.btnOperator_Click);
@@ -537,10 +538,10 @@
             this.btn10Power.Name = "btn10Power";
             this.btn10Power.Size = new System.Drawing.Size(80, 50);
             this.btn10Power.TabIndex = 41;
-            this.btn10Power.Tag = "10^{0}";
+            this.btn10Power.Tag = "10^";
             this.btn10Power.Text = "10^x";
             this.btn10Power.UseVisualStyleBackColor = false;
-            this.btn10Power.Click += new System.EventHandler(this.btnStringFunction_Click);
+            this.btn10Power.Click += new System.EventHandler(this.btnMathFunction_Click);
             // 
             // btnSquare
             // 
@@ -665,10 +666,10 @@
             this.btnE.Name = "btnE";
             this.btnE.Size = new System.Drawing.Size(80, 50);
             this.btnE.TabIndex = 51;
-            this.btnE.Tag = "e^{0}";
+            this.btnE.Tag = "e^";
             this.btnE.Text = "e^x";
             this.btnE.UseVisualStyleBackColor = false;
-            this.btnE.Click += new System.EventHandler(this.btnStringFunction_Click);
+            this.btnE.Click += new System.EventHandler(this.btnMathFunction_Click);
             // 
             // btnSin
             // 
@@ -732,7 +733,6 @@
             this.btnPi.Tag = "";
             this.btnPi.Text = "Pi";
             this.btnPi.UseVisualStyleBackColor = false;
-            this.btnPi.Click += new System.EventHandler(this.btnPi_Click);
             // 
             // btnLeftParenesis
             // 

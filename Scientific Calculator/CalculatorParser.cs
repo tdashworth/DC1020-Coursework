@@ -6,98 +6,110 @@ namespace Scientific_Calculator
 {
     public class CalculatorParser
     {
-        readonly static string[] operators = { "+", "-", "/", "*", "%", "^" };
+        public readonly static Dictionary<string, Func<double, double, double>> Operators = new Dictionary<string, Func<double, double, double>>()
+        {
+            {"yroot",(x, y) => Math.Pow(x, 1/(double)y) },
+            {"^",    (x, y) => Math.Pow(x, y) },
+            {"Mod",  (x, y) => x % y },
+            {"/",    (x, y) => x / y },
+            {"*",    (x, y) => x * y },
+            {"-",    (x, y) => x - y },
+            {"+",    (x, y) => x + y }
+        };
+        public readonly static Dictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>()
+        {
+            {"sin",   (x) => Math.Sin(x) },
+            {"cos",   (x) => Math.Cos(x) },
+            {"tan",   (x) => Math.Tan(x) },
+            {"asin",  (x) => Math.Asin(x) },
+            {"acos",  (x) => Math.Acos(x) },
+            {"atan",  (x) => Math.Atan(x) },
+            {"log",   (x) => Math.Log(x) },
+            {"√",     (x) => Math.Sqrt(x) },
+            {"exp",   (x) => Math.Exp(x) },
+            {"negate",(x) => x * -1 }
+        };
 
         public static double Resolve(string expressionStr)
         {
-            PerformFunctions(ref expressionStr);
             string[] expressionAry = Clean(expressionStr);
-            return Calculate(expressionAry);
+            return Calculate(expressionAry.ToList());
         }
 
         private static string[] Clean(string expressionStr)
         {
             expressionStr = expressionStr.Replace(" ", "");
-            foreach (var operation in operators)
-                expressionStr = expressionStr.Replace(operation, " " + operation + " ");
 
-            string[] expressionAry = expressionStr.Split(' ');
-            return expressionAry;
+            foreach (var operation in Operators.Keys)
+                expressionStr = expressionStr.Replace(operation.ToString(), " " + operation.ToString() + " ");
+
+            return expressionStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private static double Calculate(string[] expressionAry)
+        private static double Calculate(List<string> expressionList)
         {
-            double result = StringToDouble(expressionAry[0]);
+            List<double?> values = new List<double?>();
 
-            for (int index = 1; index < expressionAry.Length; index += 2)
-            {
-                switch (expressionAry[index].Trim())
-                {
-                    case "+":
-                        result += StringToDouble(expressionAry[index + 1]);
-                        break;
-                    case "-":
-                        result -= StringToDouble(expressionAry[index + 1]);
-                        break;
-                    case "*":
-                        result *= StringToDouble(expressionAry[index + 1]);
-                        break;
-                    case "/":
-                        result /= StringToDouble(expressionAry[index + 1]);
-                        break;
-                    case "^":
-                        result = Math.Pow(result, StringToDouble(expressionAry[index + 1]));
-                        break;
-                    case "%":
-                        result %= StringToDouble(expressionAry[index + 1]);
-                        break;
-                }
-            }
+            // Parse and populate values into list performing any functions along the way
+            foreach (string stringTerm in expressionList)
+                values.Add(ParseTerm(stringTerm));
 
-            return result;
+            // Perform operations in order of array (BIDMAS) 
+            foreach (string operation in Operators.Keys)
+                while (expressionList.Contains(operation))
+                    // expressionList used to dermine location of operator
+                    // values are updated and remove as they are calculated
+                    SolveOperation(operation, ref expressionList, ref values);
+
+            if (values.Count == 0)
+                values.Add(0);
+
+            return values[0].Value;
         }
 
-        readonly static Dictionary<string, Func<double, double>> functions = new Dictionary<string, Func<double, double>>()
+        private static double? ParseTerm(string stringTerm)
         {
-            {"sin",   (x) => Math.Sin(x) },
-            {"cos",   (x) => Math.Cos(x) },
-            {"tan",   (x) => Math.Tan(x) },
-            {"sin-1", (x) => Math.Asin(x) },
-            {"cos-1", (x) => Math.Acos(x) },
-            {"tan-1", (x) => Math.Atan(x) },
-            {"log",   (x) => Math.Log(x) },
-            {"root2", (x) => Math.Sqrt(x) },
-            {"root3", (x) => Math.Pow(x, 1/(double)3) },
-            {"exp",   (x) => Math.Exp(x) }
+            Double tempNum = 0.0;
 
-        };
-
-        private static void PerformFunctions(ref string expressionStr)
-        {
-            foreach (var func in functions)
-            {
-                string funcName = func.Key + "(";
-                while (expressionStr.Contains(funcName))
-                {
-                    int startBracket = expressionStr.IndexOf(funcName) + funcName.Length - 1;
-                    int endBracket = Utils.LocateEndingParenesis(expressionStr, startBracket);
-                    string bracketedValue = expressionStr.Substring(startBracket + 1, endBracket - startBracket - 1);
-                    double calculatedValue = func.Value(StringToDouble(bracketedValue));
-
-                    expressionStr =
-                        expressionStr.Substring(0, startBracket - funcName.Length + 1) +
-                        calculatedValue.ToString() +
-                        expressionStr.Substring(endBracket + 1);
-                }
-            }
+            if (Operators.Keys.Contains(stringTerm))
+                // Not a value so not added to array but null space is 
+                return null;
+            else if (Functions.Keys.Contains(stringTerm.Split('(')[0]))
+                // Solve function and place in list
+                return SolveFunction(stringTerm);
+            else if (Double.TryParse(stringTerm, out tempNum))
+                // Place value in list
+                return tempNum;
+            else
+                throw new Exception($"Unknow term in expression. Term = '{stringTerm}'");
         }
 
-        private static double StringToDouble (string s)
-        {                
-            if (s == "π")
-                return Math.PI;
+        private static void SolveOperation(string operation, ref List<string> expressionList, ref List<double?> values)
+        {
+            // Calculate result
+            int indexOfOperator = expressionList.IndexOf(operation);
+            double value1 = values[indexOfOperator - 1].Value;
+            double value2 = values[indexOfOperator + 1].Value;
+            double result = Operators[operation](value1, value2);
 
-            return Double.Parse(s);
+            // Populate result
+            values[indexOfOperator] = result;
+            expressionList[indexOfOperator] = "✓";
+
+            // Clean up
+            values.RemoveAt(indexOfOperator + 1);
+            expressionList.RemoveAt(indexOfOperator + 1);
+            values.RemoveAt(indexOfOperator - 1);
+            expressionList.RemoveAt(indexOfOperator - 1);
+        }
+
+        private static double SolveFunction(string stringTerm)
+        {
+            string[] parts = stringTerm.Split(new char[] { '(', ')' });
+            string funcName = parts[0];
+            double value = Double.Parse(parts[1]);
+
+            return Functions[funcName](value);
         }
     }
 }
