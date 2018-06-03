@@ -13,8 +13,9 @@ namespace Scientific_Calculator
             {"Mod",  (x, y) => x % y },
             {"/",    (x, y) => x / y },
             {"*",    (x, y) => x * y },
-            {"-",    (x, y) => x - y },
-            {"+",    (x, y) => x + y }
+            {"+",    (x, y) => x + y },
+            {"-",    (x, y) => x - y }
+            
         };
         public readonly static Dictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>()
         {
@@ -48,21 +49,27 @@ namespace Scientific_Calculator
 
         private static double Calculate(List<string> expressionList)
         {
+            if (expressionList.Count == 0)
+                // There are no terms so default to 0
+                return 0;
+
             List<double?> values = new List<double?>();
 
             // Parse and populate values into list performing any functions along the way
             foreach (string stringTerm in expressionList)
                 values.Add(ParseTerm(stringTerm));
 
-            // Perform operations in order of array (BIDMAS) 
-            foreach (string operation in Operators.Keys)
+            // Perform operations in order of array (_IDM__) ignoring + and -
+            List<string> operatorsToCalculate = Operators.Keys.ToList().GetRange(0, Operators.Count - 2);
+            foreach (string operation in operatorsToCalculate)
                 while (expressionList.Contains(operation))
                     // expressionList used to dermine location of operator
                     // values are updated and remove as they are calculated
                     SolveOperation(operation, ref expressionList, ref values);
 
-            if (values.Count == 0)
-                values.Add(0);
+            // Perform +, - operations from left to right
+            while (expressionList.Contains("+") || expressionList.Contains("-"))
+                SolveOperation(expressionList[1], ref expressionList, ref values);
 
             return values[0].Value;
         }
