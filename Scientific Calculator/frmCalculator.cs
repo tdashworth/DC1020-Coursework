@@ -44,16 +44,16 @@ namespace Scientific_Calculator
             if (lastOperation == UserActions.Function)
             {
                 // Last input was a function so this wraps around it
-                var parts = tbxCalculationDisplay.Text.SplitAt(Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" "))+1);
+                var parts = tbxCalculationDisplay.Text.SplitAt(Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" ")));
 
                 // Updates the value being wrapped from the value in the number textbox
-                functionParam = parts[1];
+                functionParam = parts[1].Trim();
 
                 // Removes that value (string) captured above
                 tbxCalculationDisplay.Text = parts[0];
             }
 
-            tbxCalculationDisplay.Text += (string)btnFn.Tag + "(" + functionParam + ")";
+            tbxCalculationDisplay.Text += " "+ (string)btnFn.Tag + "(" + functionParam + ")";
             Calculate(tbxCalculationDisplay.Text);
 
             lastOperation = UserActions.Function;

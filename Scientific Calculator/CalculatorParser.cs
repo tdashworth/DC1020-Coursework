@@ -15,7 +15,7 @@ namespace Scientific_Calculator
             {"*",    (x, y) => x * y },
             {"+",    (x, y) => x + y },
             {"-",    (x, y) => x - y }
-            
+
         };
         public readonly static Dictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>()
         {
@@ -116,9 +116,9 @@ namespace Scientific_Calculator
 
         private static double SolveFunction(string stringTerm)
         {
-            string[] parts = stringTerm.Split(new char[] { '(', ')' });
+            string[] parts = stringTerm.Replace(")", "").Split(new char[] { '(' }, 2);
             string funcName = parts[0];
-            double value = Double.Parse(parts[1]);
+            double value = ParseTerm(parts[1]).Value;
 
             return Functions[funcName](value);
         }
