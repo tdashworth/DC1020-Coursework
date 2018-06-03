@@ -6,8 +6,8 @@ namespace Scientific_Calculator
 {
     public partial class frmCalculator : Form
     {
-        enum Operations { Number, Operator, Function, Clear, Other };
-        Operations lastOperation = Operations.Other;
+        enum UserActions { Number, Operator, Function, Other };
+        UserActions lastOperation = UserActions.Other;
         double memory = 0;
 
         public frmCalculator()
@@ -15,23 +15,24 @@ namespace Scientific_Calculator
             InitializeComponent();
         }
 
+        // Operations and Functions
         private void btnOperator_Click(object sender, EventArgs e)
         {
             Button btnOp = (Button)sender;
 
             string currentCalculation = tbxCalculationDisplay.Text;
 
-            if (lastOperation != Operations.Function)
+            if (lastOperation != UserActions.Function)
                 currentCalculation += tbxNumberDisplay.Text;
 
-            if (lastOperation == Operations.Operator)
+            if (lastOperation == UserActions.Operator)
                 // Replace last operator with new operator
                 currentCalculation = tbxCalculationDisplay.Text.Substring(0, tbxCalculationDisplay.Text.SecondToLastIndexOf(" "));
 
             Calculate(currentCalculation);
             tbxCalculationDisplay.Text = currentCalculation + " " + (string)btnOp.Tag + " ";
 
-            lastOperation = Operations.Operator;
+            lastOperation = UserActions.Operator;
         }
 
         private void btnMathFunction_Click(object sender, EventArgs e)
@@ -40,65 +41,30 @@ namespace Scientific_Calculator
 
             string functionParam = tbxNumberDisplay.Text;
 
-            if (lastOperation == Operations.Function)
+            if (lastOperation == UserActions.Function)
             {
                 // Last input was a function so this wraps around it
+                var parts = tbxCalculationDisplay.Text.SplitAt(Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" "))+1);
 
-                functionParam = tbxCalculationDisplay.Text.Substring(
-                    Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" ")),
-                    Utils.Positive(tbxCalculationDisplay.Text.Length)
-                );
+                // Updates the value being wrapped from the value in the number textbox
+                functionParam = parts[1];
 
-                tbxCalculationDisplay.Text = tbxCalculationDisplay.Text.Substring(0, Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" ")));
+                // Removes that value (string) captured above
+                tbxCalculationDisplay.Text = parts[0];
             }
 
             tbxCalculationDisplay.Text += (string)btnFn.Tag + "(" + functionParam + ")";
             Calculate(tbxCalculationDisplay.Text);
 
-            lastOperation = Operations.Function;
-        }
-
-        private void btnStringFunction_Click(object sender, EventArgs e)
-        {
-            Button btnFn = (Button)sender;
-
-            tbxCalculationDisplay.Text += String.Format((string)btnFn.Tag, tbxNumberDisplay.Text);
-            Calculate(tbxCalculationDisplay.Text);
-
-            lastOperation = Operations.Function;
-        }
-
-        private void btnNum_Click(object sender, EventArgs e)
-        {
-            Button btnNum = (Button)sender;
-
-            if (lastOperation != Operations.Number)
-                // Clear previous value if a new number is being entered
-                tbxNumberDisplay.Text = "";
-
-            tbxNumberDisplay.Text += btnNum.Text;
-            lastOperation = Operations.Number;
-        }
-
-        private void btnEquals_Click(object sender, EventArgs e)
-        {
-            string currentCalculation = tbxCalculationDisplay.Text;
-
-            if (lastOperation != Operations.Function)
-                currentCalculation += tbxNumberDisplay.Text;
-
-            Calculate(currentCalculation);
-            tbxCalculationDisplay.Text = "";
-            lastOperation = Operations.Clear;
+            lastOperation = UserActions.Function;
         }
 
         // Display methods
-
         private void btnClear_Click(object sender, EventArgs e)
         {
             tbxCalculationDisplay.Text = "";
             tbxNumberDisplay.Text = "";
-            lastOperation = Operations.Clear;
+            lastOperation = UserActions.Other;
         }
 
         private void btnClearEntry_Click(object sender, EventArgs e)
@@ -114,7 +80,6 @@ namespace Scientific_Calculator
         }
 
         // Memory methods
-
         private void btnMemoryClear_Click(object sender, EventArgs e)
         {
             memory = 0;
@@ -152,32 +117,74 @@ namespace Scientific_Calculator
         }
 
         // Format/Other methods
+        private void btnNum_Click(object sender, EventArgs e)
+        {
+            Button btnNum = (Button)sender;
+
+            if (lastOperation != UserActions.Number)
+                // Clear previous value if a new number is being entered
+                tbxNumberDisplay.Text = "";
+
+            tbxNumberDisplay.Text += btnNum.Text;
+            lastOperation = UserActions.Number;
+        }
+
+        private void btnPeriod_Click(object sender, EventArgs e)
+        {
+            if (lastOperation != UserActions.Number)
+                // Clear previous value if a new number is being entered
+                tbxNumberDisplay.Text = "0";
+
+            if (tbxNumberDisplay.Text.Contains("."))
+                // Only one decimal point allowed
+                return;
+
+            tbxNumberDisplay.Text += ".";
+            lastOperation = UserActions.Number;
+        }
 
         private void btnLeftParenesis_Click(object sender, EventArgs e)
         {
+            if (lastOperation == UserActions.Function)
+                // Removes that function
+                tbxCalculationDisplay.Text = tbxCalculationDisplay.Text.Substring(0, Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" ")) + 1);
+
             tbxCalculationDisplay.Text += "(";
-            lastOperation = Operations.Other;
+            lastOperation = UserActions.Other;
         }
 
         private void btnRightParaenesis_Click(object sender, EventArgs e)
         {
             tbxCalculationDisplay.Text += tbxNumberDisplay.Text + ")";
             Calculate(tbxCalculationDisplay.Text);
-            lastOperation = Operations.Other;
+            lastOperation = UserActions.Other;
 
         }
 
         private void btnPi_Click(object sender, EventArgs e)
         {
             tbxNumberDisplay.Text = Math.PI.ToString();
-            lastOperation = Operations.Other;
+            lastOperation = UserActions.Other;
+        }
+
+        private void btnEquals_Click(object sender, EventArgs e)
+        {
+            string currentCalculation = tbxCalculationDisplay.Text;
+
+            if (lastOperation != UserActions.Function)
+                currentCalculation += tbxNumberDisplay.Text;
+
+            Calculate(currentCalculation);
+            tbxCalculationDisplay.Text = "";
+            lastOperation = UserActions.Other;
         }
 
         private void Calculate(string calculation)
         {
             try
             {
-                tbxNumberDisplay.Text = CalculatorParser.Resolve(calculation).ToString();
+                if (Utils.ValidBrackets(calculation))
+                    tbxNumberDisplay.Text = CalculatorParser.Resolve(calculation).ToString();
             }
             catch (Exception ex)
             {
