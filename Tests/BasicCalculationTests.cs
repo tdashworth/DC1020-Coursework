@@ -37,13 +37,13 @@ namespace Tests
         }
 
         [TestMethod]
-        public void TestAvdancedSubtraction()
+        public void TestAdvancedSubtraction()
         {
             Assert.AreEqual(5, CalculatorParser.Resolve("30-15-10"));
         }
 
         [TestMethod]
-        public void TestAvdancedMultiplcation()
+        public void TestAdvancedMultiplcation()
         {
             Assert.AreEqual(50, CalculatorParser.Resolve("2*5*5"));
         }

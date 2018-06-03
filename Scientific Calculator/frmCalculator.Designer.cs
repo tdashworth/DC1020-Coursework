@@ -733,6 +733,7 @@
             this.btnPi.Tag = "";
             this.btnPi.Text = "Pi";
             this.btnPi.UseVisualStyleBackColor = false;
+            this.btnPi.Click += new System.EventHandler(this.btnPi_Click);
             // 
             // btnLeftParenesis
             // 

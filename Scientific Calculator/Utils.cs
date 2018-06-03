@@ -4,47 +4,7 @@
     {
         internal static int Positive(int i)
         {
-            if (i < 0)
-                i = 0;
-
-            return i;
-        }
-
-        internal static int LocateEndingParenesis(string stringToSearchIn, int startIndex)
-        {
-            bool paraenesisExist = false;
-            int counter = 0;
-            int openParaenesis = 0;
-            int closeParaenesis = 0;
-            for (var i = 0; i < stringToSearchIn.Length; i++)
-            {
-                char currentCharacter = stringToSearchIn[i];
-
-                if (currentCharacter == '(')
-                {
-                    if (paraenesisExist == false)
-                    {
-                        openParaenesis = i;
-                        paraenesisExist = true;
-                    }
-                    counter++;
-                }
-                else if (currentCharacter == ')')
-                {
-                    counter--;
-
-                    if (paraenesisExist)
-                        closeParaenesis = i;
-
-                    if (counter == 0)
-                        paraenesisExist = false;
-
-                    if (openParaenesis == startIndex)
-                        return closeParaenesis;
-                }
-            }
-
-            return -1;
+            return i < 0 ? 0 : i;
         }
 
         internal static bool ValidBrackets(string calculation)

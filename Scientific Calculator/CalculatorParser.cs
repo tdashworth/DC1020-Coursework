@@ -53,6 +53,10 @@ namespace Scientific_Calculator
                 // There are no terms so default to 0
                 return 0;
 
+            if (expressionList.Count % 2 == 0)
+                // Number of terms must be odd to be valid
+                throw new Exception("Invalid expression");
+
             List<double?> values = new List<double?>();
 
             // Parse and populate values into list performing any functions along the way

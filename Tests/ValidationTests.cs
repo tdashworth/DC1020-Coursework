@@ -37,7 +37,7 @@ namespace Tests
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Invalid expression", ex.Message);
+                Assert.AreEqual("Unknow term in expression. Term = 'O'", ex.Message);
             }
         }
 
