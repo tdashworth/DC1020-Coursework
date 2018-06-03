@@ -10,7 +10,13 @@ namespace Tests
         [TestMethod]
         public void TestSinFunction()
         {
-            Assert.AreEqual(1.011968375907138, CalculatorParser.Resolve("3+sin(30)-1"));
+            Assert.AreEqual(3 + Math.Sin(30) - 1, CalculatorParser.Resolve("3+sin(30)-1"));
+        }
+
+        [TestMethod]
+        public void TestCosFunction()
+        {
+            Assert.AreEqual(3 + Math.Cos(30) - 1 * 5, CalculatorParser.Resolve("3+cos(30)-1*5"));
         }
     }
 }
