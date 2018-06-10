@@ -6,6 +6,10 @@ namespace Scientific_Calculator
 {
     public partial class frmCalculator : Form
     {
+        /// <summary>
+        /// lastOperation is used to capture the last "type" of user action. This allows for some basic validation as the user builds the expression.
+        /// These include only allowing one operator between operands therefore 2+-1 is not valid (negate function should be used to enter negation numbers
+        /// </summary>
         enum UserActions { Number, Operator, Function, Other };
         UserActions lastOperation = UserActions.Other;
         double memory = 0;
@@ -15,7 +19,7 @@ namespace Scientific_Calculator
             InitializeComponent();
         }
 
-        // Operations and Functions
+        // Operations and Functions (Generic)
         private void btnOperator_Click(object sender, EventArgs e)
         {
             Button btnOp = (Button)sender;
@@ -35,7 +39,7 @@ namespace Scientific_Calculator
             lastOperation = UserActions.Operator;
         }
 
-        private void btnMathFunction_Click(object sender, EventArgs e)
+        private void btnFunction_Click(object sender, EventArgs e)
         {
             Button btnFn = (Button)sender;
 
@@ -53,7 +57,7 @@ namespace Scientific_Calculator
                 tbxCalculationDisplay.Text = parts[0];
             }
 
-            tbxCalculationDisplay.Text += " "+ (string)btnFn.Tag + "(" + functionParam + ")";
+            tbxCalculationDisplay.Text += " " + (string)btnFn.Tag + "(" + functionParam + ")";
             Calculate(tbxCalculationDisplay.Text);
 
             lastOperation = UserActions.Function;
@@ -116,7 +120,8 @@ namespace Scientific_Calculator
             }
         }
 
-        // Format/Other methods
+        // Formating/Other methods
+        // Generic
         private void btnNum_Click(object sender, EventArgs e)
         {
             Button btnNum = (Button)sender;
@@ -157,8 +162,7 @@ namespace Scientific_Calculator
         {
             tbxCalculationDisplay.Text += tbxNumberDisplay.Text + ")";
             Calculate(tbxCalculationDisplay.Text);
-            lastOperation = UserActions.Other;
-
+            lastOperation = UserActions.Function;
         }
 
         private void btnPi_Click(object sender, EventArgs e)
@@ -183,12 +187,12 @@ namespace Scientific_Calculator
         {
             try
             {
-                if (Utils.ValidBrackets(calculation))
-                    tbxNumberDisplay.Text = CalculatorParser.Resolve(calculation).ToString();
+                tbxNumberDisplay.Text = CalculatorParser.Resolve(calculation).ToString();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ex.Message != "Invalid brackets")
+                    MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

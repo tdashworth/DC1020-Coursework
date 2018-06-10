@@ -477,7 +477,7 @@
             this.btn1Over.Tag = "1/";
             this.btn1Over.Text = "1/(x)";
             this.btn1Over.UseVisualStyleBackColor = false;
-            this.btn1Over.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btn1Over.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnLog
             // 
@@ -493,7 +493,7 @@
             this.btnLog.Tag = "log";
             this.btnLog.Text = "log";
             this.btnLog.UseVisualStyleBackColor = false;
-            this.btnLog.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnLog.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnSquareRoot
             // 
@@ -509,7 +509,7 @@
             this.btnSquareRoot.Tag = "√";
             this.btnSquareRoot.Text = "√(x)";
             this.btnSquareRoot.UseVisualStyleBackColor = false;
-            this.btnSquareRoot.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnSquareRoot.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnYRoot
             // 
@@ -541,7 +541,7 @@
             this.btn10Power.Tag = "10^";
             this.btn10Power.Text = "10^x";
             this.btn10Power.UseVisualStyleBackColor = false;
-            this.btn10Power.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btn10Power.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnSquare
             // 
@@ -557,7 +557,7 @@
             this.btnSquare.Tag = "sqr";
             this.btnSquare.Text = "x^2";
             this.btnSquare.UseVisualStyleBackColor = false;
-            this.btnSquare.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnSquare.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnCube
             // 
@@ -573,7 +573,7 @@
             this.btnCube.Tag = "cube";
             this.btnCube.Text = "x^3";
             this.btnCube.UseVisualStyleBackColor = false;
-            this.btnCube.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnCube.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnPower
             // 
@@ -621,7 +621,7 @@
             this.btnAsin.Tag = "asin";
             this.btnAsin.Text = "Asin";
             this.btnAsin.UseVisualStyleBackColor = false;
-            this.btnAsin.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnAsin.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnAcos
             // 
@@ -637,7 +637,7 @@
             this.btnAcos.Tag = "acos";
             this.btnAcos.Text = "Acos";
             this.btnAcos.UseVisualStyleBackColor = false;
-            this.btnAcos.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnAcos.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnAtan
             // 
@@ -653,7 +653,7 @@
             this.btnAtan.Tag = "atan";
             this.btnAtan.Text = "Atan";
             this.btnAtan.UseVisualStyleBackColor = false;
-            this.btnAtan.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnAtan.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnE
             // 
@@ -669,7 +669,7 @@
             this.btnE.Tag = "e^";
             this.btnE.Text = "e^x";
             this.btnE.UseVisualStyleBackColor = false;
-            this.btnE.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnE.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnSin
             // 
@@ -685,7 +685,7 @@
             this.btnSin.Tag = "sin";
             this.btnSin.Text = "sin";
             this.btnSin.UseVisualStyleBackColor = false;
-            this.btnSin.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnSin.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnCos
             // 
@@ -701,7 +701,7 @@
             this.btnCos.Tag = "cos";
             this.btnCos.Text = "cos";
             this.btnCos.UseVisualStyleBackColor = false;
-            this.btnCos.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnCos.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnTan
             // 
@@ -717,7 +717,7 @@
             this.btnTan.Tag = "tan";
             this.btnTan.Text = "tan";
             this.btnTan.UseVisualStyleBackColor = false;
-            this.btnTan.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnTan.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnPi
             // 
@@ -781,7 +781,7 @@
             this.btnLn.Tag = "ln";
             this.btnLn.Text = "ln";
             this.btnLn.UseVisualStyleBackColor = false;
-            this.btnLn.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnLn.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // btnNegate
             // 
@@ -797,7 +797,7 @@
             this.btnNegate.Tag = "negate";
             this.btnNegate.Text = "±";
             this.btnNegate.UseVisualStyleBackColor = false;
-            this.btnNegate.Click += new System.EventHandler(this.btnMathFunction_Click);
+            this.btnNegate.Click += new System.EventHandler(this.btnFunction_Click);
             // 
             // frmCalculator
             // 

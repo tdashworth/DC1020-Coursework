@@ -6,21 +6,6 @@
         {
             return i < 0 ? 0 : i;
         }
-
-        internal static bool ValidBrackets(string calculation)
-        {
-            int count = 0;
-
-            foreach(char c in calculation)
-            {
-                if (c == '(')
-                    count++;
-                if (c == ')')
-                    count--;
-            }
-
-            return count == 0;
-        }
     }
 }
 
