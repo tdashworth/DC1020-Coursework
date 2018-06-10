@@ -6,8 +6,12 @@ namespace Scientific_Calculator
 {
     public partial class frmCalculator : Form
     {
-        enum Operations { Number, Operator, Function, Clear };
-        Operations lastOperation = Operations.Clear;
+        /// <summary>
+        /// lastOperation is used to capture the last "type" of user action. This allows for some basic validation as the user builds the expression.
+        /// These include only allowing one operator between operands therefore 2+-1 is not valid (negate function should be used to enter negation numbers
+        /// </summary>
+        enum UserActions { Number, Operator, Function, Other };
+        UserActions lastOperation = UserActions.Other;
         double memory = 0;
 
         public frmCalculator()
@@ -15,88 +19,56 @@ namespace Scientific_Calculator
             InitializeComponent();
         }
 
+        // Operations and Functions (Generic)
         private void btnOperator_Click(object sender, EventArgs e)
         {
             Button btnOp = (Button)sender;
 
             string currentCalculation = tbxCalculationDisplay.Text;
 
-            if (lastOperation != Operations.Function)
+            if (lastOperation != UserActions.Function)
                 currentCalculation += tbxNumberDisplay.Text;
 
-            if (lastOperation == Operations.Operator)
+            if (lastOperation == UserActions.Operator)
                 // Replace last operator with new operator
                 currentCalculation = tbxCalculationDisplay.Text.Substring(0, tbxCalculationDisplay.Text.SecondToLastIndexOf(" "));
 
             Calculate(currentCalculation);
-            tbxCalculationDisplay.Text = currentCalculation + " " + btnOp.Text + " ";
+            tbxCalculationDisplay.Text = currentCalculation + " " + (string)btnOp.Tag + " ";
 
-            lastOperation = Operations.Operator;
+            lastOperation = UserActions.Operator;
         }
 
-        private void btnMathFunction_Click(object sender, EventArgs e)
+        private void btnFunction_Click(object sender, EventArgs e)
         {
             Button btnFn = (Button)sender;
 
             string functionParam = tbxNumberDisplay.Text;
 
-            if (lastOperation == Operations.Function)
+            if (lastOperation == UserActions.Function)
             {
                 // Last input was a function so this wraps around it
+                var parts = tbxCalculationDisplay.Text.SplitAt(Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" ")));
 
-                functionParam = tbxCalculationDisplay.Text.Substring(
-                    Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" ")),
-                    Utils.Positive(tbxCalculationDisplay.Text.Length)
-                );
+                // Updates the value being wrapped from the value in the number textbox
+                functionParam = parts[1].Trim();
 
-                tbxCalculationDisplay.Text = tbxCalculationDisplay.Text.Substring(0, Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" ")));
+                // Removes that value (string) captured above
+                tbxCalculationDisplay.Text = parts[0];
             }
 
-            tbxCalculationDisplay.Text += (string)btnFn.Tag + "(" + functionParam + ")";
+            tbxCalculationDisplay.Text += " " + (string)btnFn.Tag + "(" + functionParam + ")";
             Calculate(tbxCalculationDisplay.Text);
 
-            lastOperation = Operations.Function;
+            lastOperation = UserActions.Function;
         }
 
-        private void btnStringFunction_Click(object sender, EventArgs e)
-        {
-            Button btnFn = (Button)sender;
-            
-            tbxCalculationDisplay.Text += String.Format((string)btnFn.Tag, tbxNumberDisplay.Text);
-            Calculate(tbxCalculationDisplay.Text);
-
-            lastOperation = Operations.Function;
-        }
-
-        private void btnNum_Click(object sender, EventArgs e)
-        {
-            Button btnNum = (Button)sender;
-
-            if (lastOperation != Operations.Number)
-                // Clear previous value if a new number is being entered
-                tbxNumberDisplay.Text = "";
-
-            tbxNumberDisplay.Text += btnNum.Text;
-            lastOperation = Operations.Number;
-        }
-
-        private void btnEquals_Click(object sender, EventArgs e)
-        {
-            string currentCalculation = tbxCalculationDisplay.Text;
-
-            if (lastOperation != Operations.Function)
-                currentCalculation += tbxNumberDisplay.Text;
-
-            Calculate(currentCalculation);
-            tbxCalculationDisplay.Text = "";
-            lastOperation = Operations.Clear;
-        }
-
+        // Display methods
         private void btnClear_Click(object sender, EventArgs e)
         {
             tbxCalculationDisplay.Text = "";
             tbxNumberDisplay.Text = "";
-            lastOperation = Operations.Clear;
+            lastOperation = UserActions.Other;
         }
 
         private void btnClearEntry_Click(object sender, EventArgs e)
@@ -111,6 +83,7 @@ namespace Scientific_Calculator
             tbxNumberDisplay.Text = displayText.Substring(0, Utils.Positive(displayText.Length - 1));
         }
 
+        // Memory methods
         private void btnMemoryClear_Click(object sender, EventArgs e)
         {
             memory = 0;
@@ -147,6 +120,69 @@ namespace Scientific_Calculator
             }
         }
 
+        // Formating/Other methods
+        // Generic
+        private void btnNum_Click(object sender, EventArgs e)
+        {
+            Button btnNum = (Button)sender;
+
+            if (lastOperation != UserActions.Number)
+                // Clear previous value if a new number is being entered
+                tbxNumberDisplay.Text = "";
+
+            tbxNumberDisplay.Text += btnNum.Text;
+            lastOperation = UserActions.Number;
+        }
+
+        private void btnPeriod_Click(object sender, EventArgs e)
+        {
+            if (lastOperation != UserActions.Number)
+                // Clear previous value if a new number is being entered
+                tbxNumberDisplay.Text = "0";
+
+            if (tbxNumberDisplay.Text.Contains("."))
+                // Only one decimal point allowed
+                return;
+
+            tbxNumberDisplay.Text += ".";
+            lastOperation = UserActions.Number;
+        }
+
+        private void btnLeftParenesis_Click(object sender, EventArgs e)
+        {
+            if (lastOperation == UserActions.Function)
+                // Removes that function
+                tbxCalculationDisplay.Text = tbxCalculationDisplay.Text.Substring(0, Utils.Positive(tbxCalculationDisplay.Text.LastIndexOf(" ")) + 1);
+
+            tbxCalculationDisplay.Text += "(";
+            lastOperation = UserActions.Other;
+        }
+
+        private void btnRightParaenesis_Click(object sender, EventArgs e)
+        {
+            tbxCalculationDisplay.Text += tbxNumberDisplay.Text + ")";
+            Calculate(tbxCalculationDisplay.Text);
+            lastOperation = UserActions.Function;
+        }
+
+        private void btnPi_Click(object sender, EventArgs e)
+        {
+            tbxNumberDisplay.Text = Math.PI.ToString();
+            lastOperation = UserActions.Other;
+        }
+
+        private void btnEquals_Click(object sender, EventArgs e)
+        {
+            string currentCalculation = tbxCalculationDisplay.Text;
+
+            if (lastOperation != UserActions.Function)
+                currentCalculation += tbxNumberDisplay.Text;
+
+            Calculate(currentCalculation);
+            tbxCalculationDisplay.Text = "";
+            lastOperation = UserActions.Other;
+        }
+
         private void Calculate(string calculation)
         {
             try
@@ -155,13 +191,9 @@ namespace Scientific_Calculator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ex.Message != "Invalid brackets")
+                    MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        // TODO Roots - √(x), 3√(x), y√(x)
-        // TODO Other - Exp, Mod
-
-        // TODO Sign - +/-
     }
 }

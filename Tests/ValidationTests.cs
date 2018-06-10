@@ -10,14 +10,7 @@ namespace Tests
         [TestMethod]
         public void TestEmptyString()
         {
-            try
-            {
-                CalculatorParser.Resolve("");
-                Assert.Fail();
-            } catch (Exception ex)
-            {
-                Assert.AreEqual("Invalid expression", ex.Message);
-            } 
+            Assert.AreEqual(0, CalculatorParser.Resolve(""));
         }
 
         [TestMethod]
@@ -44,7 +37,7 @@ namespace Tests
             }
             catch (Exception ex)
             {
-                Assert.AreEqual("Invalid expression", ex.Message);
+                Assert.AreEqual("Unknow term in expression. Term = 'O'", ex.Message);
             }
         }
 
