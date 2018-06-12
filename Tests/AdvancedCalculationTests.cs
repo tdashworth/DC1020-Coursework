@@ -41,5 +41,25 @@ namespace Tests
             Assert.AreEqual((4 * 5) + (4 * Math.Sin(3)) / Math.Cos(2), CalculatorParser.Resolve("(4*5) + (4*sin(3)) / cos(2)"));
             Assert.AreEqual(1 + (2 - (Math.Pow(3, 2) * 4) / 10), CalculatorParser.Resolve("1+(2-((3^2)*4)/10)"));
         }
+
+        [TestMethod]
+        public void TestAngleModes()
+        {
+            Assert.AreEqual(CalculatorParser.Resolve("cos(sin(1))"), CalculatorParser.Resolve("cos(sin(1))", Utils.AngleMode.Rad));
+            Assert.AreEqual(0.034899496702501, CalculatorParser.Resolve("sin(2)", Utils.AngleMode.Deg), 0.000000000000001);
+            Assert.AreEqual(1.460139105621001, CalculatorParser.Resolve("atan(9)", Utils.AngleMode.Rad), 0.000000000000001);
+            Assert.AreEqual(0.998026728428272, CalculatorParser.Resolve("cos(4)", Utils.AngleMode.Grad), 0.000000000000001);
+            Assert.AreEqual(28.63625328291560, CalculatorParser.Resolve("tan(88)", Utils.AngleMode.Deg), 0.0000000000001);
+
+            try
+            {
+                CalculatorParser.Resolve("asin(62)", Utils.AngleMode.Rad);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual("Invalid input", ex.Message);
+            }
+        }
     }
 }

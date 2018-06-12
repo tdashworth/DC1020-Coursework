@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using static Scientific_Calculator.Utils;
 
 namespace Scientific_Calculator
 {
@@ -33,12 +33,13 @@ namespace Scientific_Calculator
             {"brackets", (x) => x }
         };
 
+
         /// <summary>
         /// Entry point into parser 
         /// </summary>
         /// <param name="expressionStr"></param>
         /// <returns></returns>
-        public static double Resolve(string expressionStr)
+        public static double Resolve(string expressionStr, AngleMode angleMode = AngleMode.Rad)
         {
             if (!Validation.Brackets(expressionStr))
                 throw new Exception("Invalid brackets");
@@ -48,7 +49,7 @@ namespace Scientific_Calculator
                 return 0;
 
             string[] expressionAry = Clean(expressionStr);
-            return Calculate(expressionAry.ToList());
+            return Calculate(expressionAry.ToList(), angleMode);
         }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace Scientific_Calculator
         /// </summary>
         /// <param name="expressionList">A list of strings split into there individual operators, functions and operands </param>
         /// <returns></returns>
-        private static double Calculate(List<string> expressionList)
+        private static double Calculate(List<string> expressionList, AngleMode angleMode)
         {
             if (expressionList.Count % 2 == 0)
                 // Number of terms must be odd to be valid
@@ -131,7 +132,7 @@ namespace Scientific_Calculator
 
             // Parse and populate values into list performing any functions (and brackets) along the way
             foreach (string stringTerm in expressionList)
-                values.Add(ParseTerm(stringTerm));
+                values.Add(ParseTerm(stringTerm, angleMode));
 
             // Perform operations in order of array (_IDM__) ignoring AS
             List<string> operatorsToCalculate = Operators.Keys.ToList().GetRange(0, Operators.Count - 2);
@@ -142,6 +143,9 @@ namespace Scientific_Calculator
             while (expressionList.Contains("+") || expressionList.Contains("-"))
                 SolveOperation(expressionList[1], ref expressionList, ref values);
 
+            if (values[0].Value.Equals(Double.NaN))
+                throw new Exception("Invalid input");
+
             return values[0].Value;
         }
 
@@ -150,7 +154,7 @@ namespace Scientific_Calculator
         /// </summary>
         /// <param name="stringTerm"></param>
         /// <returns> Type of double? because if the term could not be a number </returns>
-        private static double? ParseTerm(string stringTerm)
+        private static double? ParseTerm(string stringTerm, AngleMode angleMode)
         {
             Double tempNum = 0.0;
 
@@ -160,7 +164,7 @@ namespace Scientific_Calculator
                 return null;
             else if (Functions.Keys.Contains(stringTerm.Split('(')[0]))
                 // Solve function and place in list
-                return SolveFunction(stringTerm);
+                return SolveFunction(stringTerm, angleMode);
             else if (Double.TryParse(stringTerm, out tempNum))
                 // Place value in list
                 return tempNum;
@@ -202,11 +206,15 @@ namespace Scientific_Calculator
         /// </summary>
         /// <param name="stringTerm"></param>
         /// <returns></returns>
-        private static double SolveFunction(string stringTerm)
+        private static double SolveFunction(string stringTerm, AngleMode angleMode)
         {
             string[] parts = stringTerm.Split(new char[] { '(' }, 2);
             string funcName = parts[0];
-            double value = Resolve(parts[1].Substring(0, parts[1].Length-1));
+            double value = Resolve(parts[1].Substring(0, parts[1].Length - 1));
+
+            string[] trigFunctions = new string[] { "sin", "cos", "tan", "asin", "acos", "atan" };
+            if (trigFunctions.Contains(funcName))
+                value = ConvertToRad(value, angleMode);
 
             return Functions[funcName](value);
         }
