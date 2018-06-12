@@ -7,7 +7,7 @@ namespace Scientific_Calculator
 {
     public class CalculatorParser
     {
-        public readonly static Dictionary<string, Func<double, double, double>> Operators = new Dictionary<string, Func<double, double, double>>()
+        private readonly static Dictionary<string, Func<double, double, double>> Operators = new Dictionary<string, Func<double, double, double>>()
         {
             {"yroot",(x, y) => Math.Pow(x, 1/(double)y) },
             {"^",    (x, y) => Math.Pow(x, y) },
@@ -18,7 +18,7 @@ namespace Scientific_Calculator
             {"-",    (x, y) => x - y }
 
         };
-        public readonly static Dictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>()
+        private readonly static Dictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>()
         {
             {"sin",      (x) => Math.Sin(x) },
             {"cos",      (x) => Math.Cos(x) },
@@ -27,12 +27,16 @@ namespace Scientific_Calculator
             {"acos",     (x) => Math.Acos(x) },
             {"atan",     (x) => Math.Atan(x) },
             {"log",      (x) => Math.Log(x) },
+            {"ln",       (x) => Math.Log(x, Math.E) },
             {"√",        (x) => Math.Sqrt(x) },
             {"exp",      (x) => Math.Exp(x) },
             {"negate",   (x) => x * -1 },
             {"brackets", (x) => x }
         };
-
+        private readonly static Dictionary<string, double> Constants = new Dictionary<string, double>()
+        {
+            {"e", Math.E }
+        };
 
         /// <summary>
         /// Entry point into parser 
@@ -143,7 +147,7 @@ namespace Scientific_Calculator
             while (expressionList.Contains("+") || expressionList.Contains("-"))
                 SolveOperation(expressionList[1], ref expressionList, ref values);
 
-            if (values[0].Value.Equals(Double.NaN))
+            if (values[0].Value.Equals(Double.NaN) || Double.IsInfinity(values[0].Value))
                 throw new Exception("Invalid input");
 
             return values[0].Value;
@@ -165,6 +169,9 @@ namespace Scientific_Calculator
             else if (Functions.Keys.Contains(stringTerm.Split('(')[0]))
                 // Solve function and place in list
                 return SolveFunction(stringTerm, angleMode);
+            else if (Constants.Keys.Contains(stringTerm))
+                // Return Math value
+                return Constants[stringTerm];
             else if (Double.TryParse(stringTerm, out tempNum))
                 // Place value in list
                 return tempNum;
