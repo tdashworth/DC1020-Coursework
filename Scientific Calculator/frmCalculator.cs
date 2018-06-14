@@ -103,6 +103,7 @@ namespace Scientific_Calculator
             {
                 double numberInDisplay = Double.Parse(tbxNumberDisplay.Text);
                 memory += numberInDisplay;
+                tbxNumberDisplay.Text = memory.ToString();
             }
             catch (Exception ex)
             {
@@ -116,6 +117,7 @@ namespace Scientific_Calculator
             {
                 double numberInDisplay = Double.Parse(tbxNumberDisplay.Text);
                 memory -= numberInDisplay;
+                tbxNumberDisplay.Text = memory.ToString();
             }
             catch (Exception ex)
             {
@@ -213,8 +215,14 @@ namespace Scientific_Calculator
             catch (Exception ex)
             {
                 if (ex.Message != "Invalid brackets")
-                    MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DisplayError(ex.Message);
             }
+        }
+
+        private void DisplayError(string message)
+        {
+            tbxNumberDisplay.Text = message;
+            lastOperation = UserActions.Other;
         }
     }
 }

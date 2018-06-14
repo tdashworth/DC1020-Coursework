@@ -61,5 +61,11 @@ namespace Tests
                 Assert.AreEqual("Invalid input", ex.Message);
             }
         }
+
+        [TestMethod]
+        public void TestMathFunctions()
+        {
+            Assert.AreEqual(Math.Pow(10, 7491), CalculatorParser.Resolve("10 ^ (7491)"), 0.000000000000001);
+        }
     }
 }

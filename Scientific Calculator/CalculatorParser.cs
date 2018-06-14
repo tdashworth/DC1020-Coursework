@@ -39,7 +39,7 @@ namespace Scientific_Calculator
         };
 
         /// <summary>
-        /// Entry point into parser 
+        /// Entry point into parser. Default Angle mode to Rad.
         /// </summary>
         /// <param name="expressionStr"></param>
         /// <returns></returns>
@@ -147,7 +147,7 @@ namespace Scientific_Calculator
             while (expressionList.Contains("+") || expressionList.Contains("-"))
                 SolveOperation(expressionList[1], ref expressionList, ref values);
 
-            if (values[0].Value.Equals(Double.NaN) || Double.IsInfinity(values[0].Value))
+            if (values[0].Value.Equals(Double.NaN)) // || Double.IsInfinity(values[0].Value))
                 throw new Exception("Invalid input");
 
             return values[0].Value;
@@ -176,7 +176,7 @@ namespace Scientific_Calculator
                 // Place value in list
                 return tempNum;
             else
-                throw new Exception($"Unknow term in expression. Term = '{stringTerm}'");
+                throw new Exception($"Unknown term: '{stringTerm}'");
         }
 
         /// <summary>
