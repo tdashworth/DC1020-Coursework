@@ -73,9 +73,11 @@ namespace Scientific_Calculator
             List<string> terms = expressionStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             CondenseBracketedTerms(ref terms);
 
-            if (terms[0] == "-")
-                // Append "0" to the front as "-" cannot be used as a sign
-                terms.Insert(0, "0");
+            if (terms[0] == "-" && terms.Count > 1)
+            {
+                terms[1] = $"negate({terms[1]})";
+                terms.RemoveAt(0);
+            }            
 
             return terms.ToArray();
         }
