@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using static Scientific_Calculator.Utils;
 
 namespace Scientific_Calculator
@@ -16,7 +17,6 @@ namespace Scientific_Calculator
             {"*",    (x, y) => x * y },
             {"+",    (x, y) => x + y },
             {"-",    (x, y) => x - y }
-
         };
         private readonly static Dictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>()
         {
@@ -29,7 +29,6 @@ namespace Scientific_Calculator
             {"log",      (x) => Math.Log(x) },
             {"ln",       (x) => Math.Log(x, Math.E) },
             {"√",        (x) => Math.Sqrt(x) },
-            {"exp",      (x) => Math.Exp(x) },
             {"negate",   (x) => x * -1 },
             {"brackets", (x) => x }
         };
@@ -63,10 +62,9 @@ namespace Scientific_Calculator
         /// <returns></returns>
         private static string[] Clean(string expressionStr)
         {
-            expressionStr = " " + expressionStr.Replace(" ", "");
-
-            foreach (var operation in Operators.Keys)
-                expressionStr = expressionStr.Replace(operation.ToString(), " " + operation.ToString() + " ");
+            expressionStr = expressionStr.Replace(" ", "");
+            // This replace finds any operator and pads with a space either side IF the operator isn't preceded by and E (to ignore exponentials) 
+            expressionStr = Regex.Replace(expressionStr, @"(?<!E)(?<operator>\+|\-|\*|\/|\^|Mod|yroot)", " ${operator} ");
 
             expressionStr = expressionStr.Replace(" (", " brackets(");
             expressionStr = expressionStr.Replace("(", " ( ");
