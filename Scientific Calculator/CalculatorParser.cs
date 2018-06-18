@@ -26,7 +26,7 @@ namespace Scientific_Calculator
             {"asin",     (x) => Math.Asin(x) },
             {"acos",     (x) => Math.Acos(x) },
             {"atan",     (x) => Math.Atan(x) },
-            {"log",      (x) => Math.Log(x) },
+            {"log",      (x) => Math.Log10(x) },
             {"ln",       (x) => Math.Log(x, Math.E) },
             {"√",        (x) => Math.Sqrt(x) },
             {"negate",   (x) => x * -1 },
@@ -62,7 +62,7 @@ namespace Scientific_Calculator
         /// <returns></returns>
         private static string[] Clean(string expressionStr)
         {
-            expressionStr = expressionStr.Replace(" ", "");
+            expressionStr = " " + expressionStr.Replace(" ", "");
             // This replace finds any operator and pads with a space either side IF the operator isn't preceded by and E (to ignore exponentials) 
             expressionStr = Regex.Replace(expressionStr, @"(?<!E)(?<operator>\+|\-|\*|\/|\^|Mod|yroot)", " ${operator} ");
 
