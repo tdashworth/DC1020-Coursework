@@ -1,6 +1,7 @@
 ﻿using StringExtensions;
 using System;
 using System.Windows.Forms;
+using static Scientific_Calculator.Utils;
 
 namespace Scientific_Calculator
 {
@@ -12,6 +13,8 @@ namespace Scientific_Calculator
         /// </summary>
         enum UserActions { Number, Operator, Function, Other };
         UserActions lastOperation = UserActions.Other;
+
+        AngleMode angleMode = AngleMode.Rad;
         double memory = 0;
 
         public frmCalculator()
@@ -100,6 +103,7 @@ namespace Scientific_Calculator
             {
                 double numberInDisplay = Double.Parse(tbxNumberDisplay.Text);
                 memory += numberInDisplay;
+                tbxNumberDisplay.Text = memory.ToString();
             }
             catch (Exception ex)
             {
@@ -113,6 +117,7 @@ namespace Scientific_Calculator
             {
                 double numberInDisplay = Double.Parse(tbxNumberDisplay.Text);
                 memory -= numberInDisplay;
+                tbxNumberDisplay.Text = memory.ToString();
             }
             catch (Exception ex)
             {
@@ -171,6 +176,24 @@ namespace Scientific_Calculator
             lastOperation = UserActions.Other;
         }
 
+        private void btnAngleMode_Click(object sender, EventArgs e)
+        {
+            switch (angleMode)
+            {
+                case AngleMode.Rad:
+                    angleMode = AngleMode.Deg;
+                    break;
+                case AngleMode.Deg:
+                    angleMode = AngleMode.Grad;
+                    break;
+                case AngleMode.Grad:
+                    angleMode = AngleMode.Rad;
+                    break;
+            }
+
+            btnAngleMode.Text = angleMode.ToString().ToUpper();
+        }
+
         private void btnEquals_Click(object sender, EventArgs e)
         {
             string currentCalculation = tbxCalculationDisplay.Text;
@@ -187,13 +210,19 @@ namespace Scientific_Calculator
         {
             try
             {
-                tbxNumberDisplay.Text = CalculatorParser.Resolve(calculation).ToString();
+                tbxNumberDisplay.Text = CalculatorParser.Resolve(calculation, angleMode).ToString();
             }
             catch (Exception ex)
             {
                 if (ex.Message != "Invalid brackets")
-                    MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DisplayError(ex.Message);
             }
+        }
+
+        private void DisplayError(string message)
+        {
+            tbxNumberDisplay.Text = message;
+            lastOperation = UserActions.Other;
         }
     }
 }

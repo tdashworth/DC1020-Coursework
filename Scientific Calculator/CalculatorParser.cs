@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using static Scientific_Calculator.Utils;
 
 namespace Scientific_Calculator
 {
     public class CalculatorParser
     {
-        public readonly static Dictionary<string, Func<double, double, double>> Operators = new Dictionary<string, Func<double, double, double>>()
+        private readonly static Dictionary<string, Func<double, double, double>> Operators = new Dictionary<string, Func<double, double, double>>()
         {
             {"yroot",(x, y) => Math.Pow(x, 1/(double)y) },
             {"^",    (x, y) => Math.Pow(x, y) },
@@ -16,9 +17,8 @@ namespace Scientific_Calculator
             {"*",    (x, y) => x * y },
             {"+",    (x, y) => x + y },
             {"-",    (x, y) => x - y }
-
         };
-        public readonly static Dictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>()
+        private readonly static Dictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>()
         {
             {"sin",      (x) => Math.Sin(x) },
             {"cos",      (x) => Math.Cos(x) },
@@ -26,19 +26,23 @@ namespace Scientific_Calculator
             {"asin",     (x) => Math.Asin(x) },
             {"acos",     (x) => Math.Acos(x) },
             {"atan",     (x) => Math.Atan(x) },
-            {"log",      (x) => Math.Log(x) },
+            {"log",      (x) => Math.Log10(x) },
+            {"ln",       (x) => Math.Log(x, Math.E) },
             {"√",        (x) => Math.Sqrt(x) },
-            {"exp",      (x) => Math.Exp(x) },
             {"negate",   (x) => x * -1 },
             {"brackets", (x) => x }
         };
+        private readonly static Dictionary<string, double> Constants = new Dictionary<string, double>()
+        {
+            {"e", Math.E }
+        };
 
         /// <summary>
-        /// Entry point into parser 
+        /// Entry point into parser. Default Angle mode to Rad.
         /// </summary>
         /// <param name="expressionStr"></param>
         /// <returns></returns>
-        public static double Resolve(string expressionStr)
+        public static double Resolve(string expressionStr, AngleMode angleMode = AngleMode.Rad)
         {
             if (!Validation.Brackets(expressionStr))
                 throw new Exception("Invalid brackets");
@@ -48,7 +52,7 @@ namespace Scientific_Calculator
                 return 0;
 
             string[] expressionAry = Clean(expressionStr);
-            return Calculate(expressionAry.ToList());
+            return Calculate(expressionAry.ToList(), angleMode);
         }
 
         /// <summary>
@@ -59,9 +63,8 @@ namespace Scientific_Calculator
         private static string[] Clean(string expressionStr)
         {
             expressionStr = " " + expressionStr.Replace(" ", "");
-
-            foreach (var operation in Operators.Keys)
-                expressionStr = expressionStr.Replace(operation.ToString(), " " + operation.ToString() + " ");
+            // This replace finds any operator and pads with a space either side IF the operator isn't preceded by and E (to ignore exponentials) 
+            expressionStr = Regex.Replace(expressionStr, @"(?<!E)(?<operator>\+|\-|\*|\/|\^|Mod|yroot)", " ${operator} ");
 
             expressionStr = expressionStr.Replace(" (", " brackets(");
             expressionStr = expressionStr.Replace("(", " ( ");
@@ -70,9 +73,11 @@ namespace Scientific_Calculator
             List<string> terms = expressionStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             CondenseBracketedTerms(ref terms);
 
-            if (terms[0] == "-")
-                // Append "0" to the front as "-" cannot be used as a sign
-                terms.Insert(0, "0");
+            if (terms[0] == "-" && terms.Count > 1)
+            {
+                terms[1] = $"negate({terms[1]})";
+                terms.RemoveAt(0);
+            }
 
             return terms.ToArray();
         }
@@ -100,8 +105,10 @@ namespace Scientific_Calculator
 
                 if (functionNameLocation != -1)
                 {
+                    // Append term to function name and remove element 
                     terms[functionNameLocation] += stringTerm;
                     terms.RemoveAt(i);
+                    // Componsate for removed element
                     i--;
                 }
 
@@ -121,7 +128,7 @@ namespace Scientific_Calculator
         /// </summary>
         /// <param name="expressionList">A list of strings split into there individual operators, functions and operands </param>
         /// <returns></returns>
-        private static double Calculate(List<string> expressionList)
+        private static double Calculate(List<string> expressionList, AngleMode angleMode)
         {
             if (expressionList.Count % 2 == 0)
                 // Number of terms must be odd to be valid
@@ -131,16 +138,20 @@ namespace Scientific_Calculator
 
             // Parse and populate values into list performing any functions (and brackets) along the way
             foreach (string stringTerm in expressionList)
-                values.Add(ParseTerm(stringTerm));
+                values.Add(ParseTerm(stringTerm, angleMode));
 
             // Perform operations in order of array (_IDM__) ignoring AS
             List<string> operatorsToCalculate = Operators.Keys.ToList().GetRange(0, Operators.Count - 2);
             foreach (string operation in operatorsToCalculate)
-                SolveOperation(operation, ref expressionList, ref values);
+                while (expressionList.Contains(operation))
+                    SolveOperation(operation, ref expressionList, ref values);
 
             // Perform +, - operations from left to right
             while (expressionList.Contains("+") || expressionList.Contains("-"))
                 SolveOperation(expressionList[1], ref expressionList, ref values);
+
+            if (values[0].Value.Equals(Double.NaN)) // || Double.IsInfinity(values[0].Value))
+                throw new Exception("Invalid input");
 
             return values[0].Value;
         }
@@ -150,7 +161,7 @@ namespace Scientific_Calculator
         /// </summary>
         /// <param name="stringTerm"></param>
         /// <returns> Type of double? because if the term could not be a number </returns>
-        private static double? ParseTerm(string stringTerm)
+        private static double? ParseTerm(string stringTerm, AngleMode angleMode)
         {
             Double tempNum = 0.0;
 
@@ -160,12 +171,15 @@ namespace Scientific_Calculator
                 return null;
             else if (Functions.Keys.Contains(stringTerm.Split('(')[0]))
                 // Solve function and place in list
-                return SolveFunction(stringTerm);
+                return SolveFunction(stringTerm, angleMode);
+            else if (Constants.Keys.Contains(stringTerm))
+                // Return Math value
+                return Constants[stringTerm];
             else if (Double.TryParse(stringTerm, out tempNum))
                 // Place value in list
                 return tempNum;
             else
-                throw new Exception($"Unknow term in expression. Term = '{stringTerm}'");
+                throw new Exception($"Unknown term: '{stringTerm}'");
         }
 
         /// <summary>
@@ -176,25 +190,22 @@ namespace Scientific_Calculator
         /// <param name="values"></param>
         private static void SolveOperation(string operation, ref List<string> expressionList, ref List<double?> values)
         {
-            while (expressionList.Contains(operation))
-            {
-                // expressionList used to dermine location of operator
-                // Calculate result
-                int indexOfOperator = expressionList.IndexOf(operation);
-                double value1 = values[indexOfOperator - 1].Value;
-                double value2 = values[indexOfOperator + 1].Value;
-                double result = Operators[operation](value1, value2);
+            // expressionList used to dermine location of operator
+            // Calculate result
+            int indexOfOperator = expressionList.IndexOf(operation);
+            double value1 = values[indexOfOperator - 1].Value;
+            double value2 = values[indexOfOperator + 1].Value;
+            double result = Operators[operation](value1, value2);
 
-                // Populate result
-                values[indexOfOperator] = result;
-                expressionList[indexOfOperator] = "✓";
+            // Populate result
+            values[indexOfOperator] = result;
+            expressionList[indexOfOperator] = "✓";
 
-                // Clean up
-                values.RemoveAt(indexOfOperator + 1);
-                expressionList.RemoveAt(indexOfOperator + 1);
-                values.RemoveAt(indexOfOperator - 1);
-                expressionList.RemoveAt(indexOfOperator - 1);
-            }
+            // Clean up
+            values.RemoveAt(indexOfOperator + 1);
+            expressionList.RemoveAt(indexOfOperator + 1);
+            values.RemoveAt(indexOfOperator - 1);
+            expressionList.RemoveAt(indexOfOperator - 1);
         }
 
         /// <summary>
@@ -202,11 +213,15 @@ namespace Scientific_Calculator
         /// </summary>
         /// <param name="stringTerm"></param>
         /// <returns></returns>
-        private static double SolveFunction(string stringTerm)
+        private static double SolveFunction(string stringTerm, AngleMode angleMode)
         {
             string[] parts = stringTerm.Split(new char[] { '(' }, 2);
             string funcName = parts[0];
-            double value = Resolve(parts[1].Substring(0, parts[1].Length-1));
+            double value = Resolve(parts[1].Substring(0, parts[1].Length - 1));
+
+            string[] trigFunctions = new string[] { "sin", "cos", "tan", "asin", "acos", "atan" };
+            if (trigFunctions.Contains(funcName))
+                value = ConvertToRad(value, angleMode);
 
             return Functions[funcName](value);
         }

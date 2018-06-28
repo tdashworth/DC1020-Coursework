@@ -74,6 +74,7 @@
             this.btnRightParaenesis = new System.Windows.Forms.Button();
             this.btnLn = new System.Windows.Forms.Button();
             this.btnNegate = new System.Windows.Forms.Button();
+            this.btnAngleMode = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbxNumberDisplay
@@ -344,9 +345,9 @@
             this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClear.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnClear.Location = new System.Drawing.Point(414, 80);
+            this.btnClear.Location = new System.Drawing.Point(440, 80);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(60, 30);
+            this.btnClear.Size = new System.Drawing.Size(50, 30);
             this.btnClear.TabIndex = 17;
             this.btnClear.Text = "C";
             this.btnClear.UseVisualStyleBackColor = false;
@@ -360,9 +361,9 @@
             this.btnBackspace.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnBackspace.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBackspace.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnBackspace.Location = new System.Drawing.Point(548, 80);
+            this.btnBackspace.Location = new System.Drawing.Point(558, 80);
             this.btnBackspace.Name = "btnBackspace";
-            this.btnBackspace.Size = new System.Drawing.Size(60, 30);
+            this.btnBackspace.Size = new System.Drawing.Size(50, 30);
             this.btnBackspace.TabIndex = 18;
             this.btnBackspace.Text = "←";
             this.btnBackspace.UseVisualStyleBackColor = false;
@@ -391,9 +392,9 @@
             this.btnClearEntry.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClearEntry.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClearEntry.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnClearEntry.Location = new System.Drawing.Point(481, 80);
+            this.btnClearEntry.Location = new System.Drawing.Point(499, 80);
             this.btnClearEntry.Name = "btnClearEntry";
-            this.btnClearEntry.Size = new System.Drawing.Size(60, 30);
+            this.btnClearEntry.Size = new System.Drawing.Size(50, 30);
             this.btnClearEntry.TabIndex = 24;
             this.btnClearEntry.Text = "CE";
             this.btnClearEntry.UseVisualStyleBackColor = false;
@@ -407,9 +408,9 @@
             this.btnMemorySubtraction.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMemorySubtraction.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMemorySubtraction.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnMemorySubtraction.Location = new System.Drawing.Point(213, 80);
+            this.btnMemorySubtraction.Location = new System.Drawing.Point(259, 80);
             this.btnMemorySubtraction.Name = "btnMemorySubtraction";
-            this.btnMemorySubtraction.Size = new System.Drawing.Size(60, 30);
+            this.btnMemorySubtraction.Size = new System.Drawing.Size(50, 30);
             this.btnMemorySubtraction.TabIndex = 23;
             this.btnMemorySubtraction.Text = "M-";
             this.btnMemorySubtraction.UseVisualStyleBackColor = false;
@@ -423,9 +424,9 @@
             this.btnMemoryRecall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMemoryRecall.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMemoryRecall.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnMemoryRecall.Location = new System.Drawing.Point(79, 80);
+            this.btnMemoryRecall.Location = new System.Drawing.Point(141, 80);
             this.btnMemoryRecall.Name = "btnMemoryRecall";
-            this.btnMemoryRecall.Size = new System.Drawing.Size(60, 30);
+            this.btnMemoryRecall.Size = new System.Drawing.Size(50, 30);
             this.btnMemoryRecall.TabIndex = 25;
             this.btnMemoryRecall.Text = "MR";
             this.btnMemoryRecall.UseVisualStyleBackColor = false;
@@ -439,9 +440,9 @@
             this.btnMemoryClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMemoryClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMemoryClear.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnMemoryClear.Location = new System.Drawing.Point(12, 80);
+            this.btnMemoryClear.Location = new System.Drawing.Point(82, 80);
             this.btnMemoryClear.Name = "btnMemoryClear";
-            this.btnMemoryClear.Size = new System.Drawing.Size(60, 30);
+            this.btnMemoryClear.Size = new System.Drawing.Size(50, 30);
             this.btnMemoryClear.TabIndex = 26;
             this.btnMemoryClear.Text = "MC";
             this.btnMemoryClear.UseVisualStyleBackColor = false;
@@ -455,9 +456,9 @@
             this.btnMemoryAddition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMemoryAddition.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMemoryAddition.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnMemoryAddition.Location = new System.Drawing.Point(146, 80);
+            this.btnMemoryAddition.Location = new System.Drawing.Point(200, 80);
             this.btnMemoryAddition.Name = "btnMemoryAddition";
-            this.btnMemoryAddition.Size = new System.Drawing.Size(60, 30);
+            this.btnMemoryAddition.Size = new System.Drawing.Size(50, 30);
             this.btnMemoryAddition.TabIndex = 27;
             this.btnMemoryAddition.Text = "M+";
             this.btnMemoryAddition.UseVisualStyleBackColor = false;
@@ -743,9 +744,9 @@
             this.btnLeftParenesis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLeftParenesis.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLeftParenesis.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnLeftParenesis.Location = new System.Drawing.Point(280, 80);
+            this.btnLeftParenesis.Location = new System.Drawing.Point(321, 80);
             this.btnLeftParenesis.Name = "btnLeftParenesis";
-            this.btnLeftParenesis.Size = new System.Drawing.Size(60, 30);
+            this.btnLeftParenesis.Size = new System.Drawing.Size(50, 30);
             this.btnLeftParenesis.TabIndex = 52;
             this.btnLeftParenesis.Text = "(";
             this.btnLeftParenesis.UseVisualStyleBackColor = false;
@@ -759,9 +760,9 @@
             this.btnRightParaenesis.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRightParaenesis.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRightParaenesis.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnRightParaenesis.Location = new System.Drawing.Point(347, 80);
+            this.btnRightParaenesis.Location = new System.Drawing.Point(380, 80);
             this.btnRightParaenesis.Name = "btnRightParaenesis";
-            this.btnRightParaenesis.Size = new System.Drawing.Size(60, 30);
+            this.btnRightParaenesis.Size = new System.Drawing.Size(50, 30);
             this.btnRightParaenesis.TabIndex = 53;
             this.btnRightParaenesis.Text = ")";
             this.btnRightParaenesis.UseVisualStyleBackColor = false;
@@ -799,12 +800,29 @@
             this.btnNegate.UseVisualStyleBackColor = false;
             this.btnNegate.Click += new System.EventHandler(this.btnFunction_Click);
             // 
+            // btnAngleMode
+            // 
+            this.btnAngleMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.btnAngleMode.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btnAngleMode.FlatAppearance.BorderSize = 0;
+            this.btnAngleMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAngleMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAngleMode.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnAngleMode.Location = new System.Drawing.Point(13, 80);
+            this.btnAngleMode.Name = "btnAngleMode";
+            this.btnAngleMode.Size = new System.Drawing.Size(58, 30);
+            this.btnAngleMode.TabIndex = 56;
+            this.btnAngleMode.Text = "RAD";
+            this.btnAngleMode.UseVisualStyleBackColor = false;
+            this.btnAngleMode.Click += new System.EventHandler(this.btnAngleMode_Click);
+            // 
             // frmCalculator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(622, 403);
+            this.Controls.Add(this.btnAngleMode);
             this.Controls.Add(this.btnNegate);
             this.Controls.Add(this.btnLn);
             this.Controls.Add(this.btnRightParaenesis);
@@ -910,6 +928,7 @@
         private System.Windows.Forms.Button btnRightParaenesis;
         private System.Windows.Forms.Button btnLn;
         private System.Windows.Forms.Button btnNegate;
+        private System.Windows.Forms.Button btnAngleMode;
     }
 }
 
