@@ -77,7 +77,7 @@ namespace Scientific_Calculator
             {
                 terms[1] = $"negate({terms[1]})";
                 terms.RemoveAt(0);
-            }            
+            }
 
             return terms.ToArray();
         }
@@ -105,8 +105,10 @@ namespace Scientific_Calculator
 
                 if (functionNameLocation != -1)
                 {
+                    // Append term to function name and remove element 
                     terms[functionNameLocation] += stringTerm;
                     terms.RemoveAt(i);
+                    // Componsate for removed element
                     i--;
                 }
 
@@ -141,7 +143,8 @@ namespace Scientific_Calculator
             // Perform operations in order of array (_IDM__) ignoring AS
             List<string> operatorsToCalculate = Operators.Keys.ToList().GetRange(0, Operators.Count - 2);
             foreach (string operation in operatorsToCalculate)
-                SolveOperation(operation, ref expressionList, ref values);
+                while (expressionList.Contains(operation))
+                    SolveOperation(operation, ref expressionList, ref values);
 
             // Perform +, - operations from left to right
             while (expressionList.Contains("+") || expressionList.Contains("-"))
@@ -187,25 +190,22 @@ namespace Scientific_Calculator
         /// <param name="values"></param>
         private static void SolveOperation(string operation, ref List<string> expressionList, ref List<double?> values)
         {
-            while (expressionList.Contains(operation))
-            {
-                // expressionList used to dermine location of operator
-                // Calculate result
-                int indexOfOperator = expressionList.IndexOf(operation);
-                double value1 = values[indexOfOperator - 1].Value;
-                double value2 = values[indexOfOperator + 1].Value;
-                double result = Operators[operation](value1, value2);
+            // expressionList used to dermine location of operator
+            // Calculate result
+            int indexOfOperator = expressionList.IndexOf(operation);
+            double value1 = values[indexOfOperator - 1].Value;
+            double value2 = values[indexOfOperator + 1].Value;
+            double result = Operators[operation](value1, value2);
 
-                // Populate result
-                values[indexOfOperator] = result;
-                expressionList[indexOfOperator] = "✓";
+            // Populate result
+            values[indexOfOperator] = result;
+            expressionList[indexOfOperator] = "✓";
 
-                // Clean up
-                values.RemoveAt(indexOfOperator + 1);
-                expressionList.RemoveAt(indexOfOperator + 1);
-                values.RemoveAt(indexOfOperator - 1);
-                expressionList.RemoveAt(indexOfOperator - 1);
-            }
+            // Clean up
+            values.RemoveAt(indexOfOperator + 1);
+            expressionList.RemoveAt(indexOfOperator + 1);
+            values.RemoveAt(indexOfOperator - 1);
+            expressionList.RemoveAt(indexOfOperator - 1);
         }
 
         /// <summary>
