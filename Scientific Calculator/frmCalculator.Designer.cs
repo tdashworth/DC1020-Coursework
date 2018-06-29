@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCalculator));
             this.tbxNumberDisplay = new System.Windows.Forms.TextBox();
             this.btnNum1 = new System.Windows.Forms.Button();
             this.btnNum2 = new System.Windows.Forms.Button();
@@ -869,6 +870,7 @@
             this.Controls.Add(this.btnNum2);
             this.Controls.Add(this.btnNum1);
             this.Controls.Add(this.tbxNumberDisplay);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(638, 442);
             this.MinimumSize = new System.Drawing.Size(638, 442);
