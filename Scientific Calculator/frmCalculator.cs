@@ -165,7 +165,10 @@ namespace Scientific_Calculator
 
         private void btnRightParaenesis_Click(object sender, EventArgs e)
         {
-            tbxCalculationDisplay.Text += tbxNumberDisplay.Text + ")";
+            if (lastOperation == UserActions.Number)
+                tbxCalculationDisplay.Text += tbxNumberDisplay.Text;
+
+            tbxCalculationDisplay.Text += ")";
             Calculate(tbxCalculationDisplay.Text);
             lastOperation = UserActions.Function;
         }
